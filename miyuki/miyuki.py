@@ -18,7 +18,7 @@ magic_number = 114514
 RECORD_FILE = 'downloaded_urls_miyuki.txt'
 FFMPEG_INPUT_FILE = 'ffmpeg_input_miyuki.txt'
 ERROR_RECORD_FILE = 'error_records_miyuki.txt'
-TMP_HTML_FILE = 'tmp_movie_miyuki.html'
+TMP_THML_FILE = 'tmp_movie_miyuki.html'
 downloaded_urls = set()
 movie_save_path_root = 'movies_folder_miyuki'
 video_m3u8_prefix = 'https://surrit.com/'
@@ -33,7 +33,6 @@ match_title_pattern = r'<title>([^"]+)</title>'
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
 }
-
 banner = """
  ██████   ██████  ███                        █████       ███ 
 ░░██████ ██████  ░░░                        ░░███       ░░░  
@@ -228,6 +227,7 @@ def generate_mp4_by_ffmpeg(movie_name, cover_as_preview, video_reencode, audio_r
         ffmpeg_command = [
             'ffmpeg',
             '-loglevel', 'error',
+            '-progress', 'pipe:1',
             '-f', 'concat',
             '-safe', '0',
             '-i', FFMPEG_INPUT_FILE,
@@ -246,6 +246,7 @@ def generate_mp4_by_ffmpeg(movie_name, cover_as_preview, video_reencode, audio_r
         ffmpeg_command = [
             'ffmpeg',
             '-loglevel', 'error',
+            '-progress', 'pipe:1',
             '-f', 'concat',
             '-safe', '0',
             '-i', FFMPEG_INPUT_FILE,
@@ -256,7 +257,42 @@ def generate_mp4_by_ffmpeg(movie_name, cover_as_preview, video_reencode, audio_r
 
     try:
         logging.info("FFmpeg executing...")
-        subprocess.run(ffmpeg_command, check=True, stdout=subprocess.DEVNULL)
+        frame = 0
+        bitrate = 0
+        size = 0
+        speed = 0
+        with subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, text=True) as ffmpeg_proc:
+            while ffmpeg_proc.poll() is None:
+                status = ffmpeg_proc.stdout.readline()
+                if status is None:
+                    continue
+                try:
+                    stype, sdata = status.split("=")
+                except Exception:
+                    continue
+                match stype:
+                    case "frame": frame = int(sdata)
+                    case "bitrate": bitrate = sdata.strip()
+                    case "total_size":
+                        size = int(sdata)
+                        unit = ["B", "kB", "MB", "GB", "TB"]
+                        while size > 1000:
+                            size /= 1000
+                            unit.pop(0)
+                        size = f"{round(size, 2)} {unit[0]}"
+
+                    case "speed": speed = sdata.strip()
+
+                print(
+                    f"Video Frames: {frame}, Biterate: {bitrate}, File Size: {size}, Speed: {speed}   ",
+                    end="\r"
+                )
+        print()
+        if ffmpeg_proc.returncode != 0:
+            raise subprocess.CalledProcessError(
+                ffmpeg_proc.returncode,
+                ffmpeg_command
+            )
         logging.info("FFmpeg execution completed.")
     except subprocess.CalledProcessError as e:
         logging.error(f"Movie name: {movie_name}, FFmpeg execution failed: {e}")
@@ -321,7 +357,7 @@ def create_root_folder_if_not_exists(folder_name):
 def get_movie_uuid(url):
     html = requests.get(url=url, headers=headers, verify=False).text
 
-    with open(TMP_HTML_FILE, "w", encoding="UTF-8") as file:
+    with open(TMP_THML_FILE, "w", encoding="UTF-8") as file:
         file.write(html)
 
     match = re.search(match_uuid_pattern, html)
@@ -378,8 +414,9 @@ def already_downloaded(url):
                 downloaded_urls.add(line.strip())
     return url in downloaded_urls
 
-def download(movie_url, download_action=True, write_action=True, ffmpeg_action=False,
+def download(movie_url, download_action=True, write_action=True, delete_action=True, ffmpeg_action=False,
              num_threads=os.cpu_count(), cover_action=True, title_action=True, cover_as_preview=False, video_reencode=False, audio_reencode=False):
+
     movie_name = movie_url.split('/')[-1]
 
     if already_downloaded(movie_url):
@@ -757,8 +794,8 @@ def main():
         epilog='Examples:\n'
                '  miyuki -plist "https://missav.com/search/JULIA?filters=uncensored-leak&sort=saved" -limit 50 -ffmpeg\n'
                '  miyuki -plist "https://missav.com/search/JULIA?filters=individual&sort=views" -limit 20 -ffmpeg\n'
-               '  miyuki -plist "https://missav.com/dm132/actresses/JULIA" -limit 20 -ffmpeg -cover\n'
-               '  miyuki -plist "https://missav.com/playlists/ewzoukev" -ffmpeg -proxy localhost:7890\n'
+               '  miyuki -plist https://missav.com/dm132/actresses/JULIA -limit 20 -ffmpeg -cover\n'
+               '  miyuki -plist https://missav.com/playlists/ewzoukev -ffmpeg -proxy localhost:7890\n'
                '  miyuki -urls https://missav.com/sw-950 https://missav.com/dandy-917\n'
                '  miyuki -urls https://missav.com/sw-950 -proxy localhost:7890\n'
                '  miyuki -auth miyuki@gmail.com miyukiQAQ -ffmpeg\n'

@@ -22,12 +22,8 @@ FFMPEG_INPUT_FILE = 'ffmpeg_input_miyuki.txt'
 ERROR_RECORD_FILE = 'error_records_miyuki.txt'
 TMP_THML_FILE = 'tmp_movie_miyuki.html'
 downloaded_urls = set()
-<<<<<<< HEAD
-movie_save_path_root = '.' #'movies_folder_miyuki'
-=======
-movie_save_path_root = 'movies_folder_miyuki'
+movie_save_path_root = '.'
 COVER_URL_PREFIX = 'https://fourhoi.com/'
->>>>>>> refs/remotes/origin/master
 video_m3u8_prefix = 'https://surrit.com/'
 video_playlist_suffix = '/playlist.m3u8'
 href_regex_movie_collection = r'<a class="text-secondary group-hover:text-primary" href="([^"]+)" alt="'
@@ -334,19 +330,10 @@ def generate_input_txt(movie_name, video_offset_max):
     completion_rate = '{:.2%}'.format(downloaded_files / (total_files))
     logging.info(f'Total files : {total_files} , downloaded files : {downloaded_files} , completion rate : {completion_rate}')
 
-
-<<<<<<< HEAD
-def video_write_jpegs_to_mp4_by_ffmpeg(movie_name, video_offset_max, cover_as_preview, video_reencode, audio_reencode):
+def video_write_jpegs_to_mp4_by_ffmpeg(movie_name, video_offset_max, cover_as_preview, final_file_name, video_reencode, audio_reencode):
     # make input.txt first
     generate_input_txt(movie_name, video_offset_max)
-    generate_mp4_by_ffmpeg(movie_name, cover_as_preview, video_reencode, audio_reencode)
-=======
-def video_write_jpegs_to_mp4_by_ffmpeg(movie_name, video_offset_max, cover_as_preview, final_file_name):
-    # make input.txt first
-    generate_input_txt(movie_name, video_offset_max)
-    generate_mp4_by_ffmpeg(movie_name, final_file_name, cover_as_preview)
->>>>>>> refs/remotes/origin/master
-
+    generate_mp4_by_ffmpeg(movie_name, final_file_name, cover_as_preview, video_reencode, audio_reencode)
 
 def video_download_jpegs(intervals, uuid, resolution, movie_name, video_offset_max, retry, delay, timeout):
     thread_task_list = []
@@ -442,9 +429,6 @@ def already_downloaded(url):
                 downloaded_urls.add(line.strip())
     return url in downloaded_urls
 
-<<<<<<< HEAD
-def download(movie_url, download_action=True, write_action=True, delete_action=True, ffmpeg_action=False,
-             num_threads=os.cpu_count(), cover_action=True, title_action=True, cover_as_preview=False, video_reencode=False, audio_reencode=False):
 =======
 
 def find_closest(arr, target):
@@ -488,11 +472,9 @@ def get_final_quality_and_resolution(playlist, quality : str):
         final_quality = resolution_url.split('/')[0]
         return final_quality, resolution_url
 
-
-
 def download(movie_url, download_action=True, write_action=True, ffmpeg_action=False,
-             num_threads=os.cpu_count(), cover_action=True, title_action=False, cover_as_preview=False, quality=None , retry=None, delay=None, timeout=None):
->>>>>>> refs/remotes/origin/master
+             num_threads=os.cpu_count(), cover_action=True, title_action=False, cover_as_preview=False,
+             video_reencode=False, audio_reencode=False, quality=None , retry=None, delay=None, timeout=None):
 
     movie_name = movie_url.split('/')[-1]
 
@@ -554,11 +536,7 @@ def download(movie_url, download_action=True, write_action=True, ffmpeg_action=F
 
     if write_action:
         if ffmpeg_action:
-<<<<<<< HEAD
-            video_write_jpegs_to_mp4_by_ffmpeg(movie_name, video_offset_max, cover_as_preview, video_reencode, audio_reencode)
-=======
-            video_write_jpegs_to_mp4_by_ffmpeg(movie_name, video_offset_max, cover_as_preview, final_file_name)
->>>>>>> refs/remotes/origin/master
+            video_write_jpegs_to_mp4_by_ffmpeg(movie_name, video_offset_max, cover_as_preview, final_file_name, video_reencode, audio_reencode)
         else:
             video_write_jpegs_to_mp4(movie_name, video_offset_max, final_file_name)
 
@@ -713,8 +691,6 @@ def get_movie_collections(cookie):
     logging.info("All the video URLs have been successfully obtained.")
     return movie_url_list
 
-
-<<<<<<< HEAD
 def order_url_by_tags_match(urls, filter_tags, strict=False):
     #TODO: Implement strict
     #TODO: Implement in other functions ()
@@ -739,11 +715,6 @@ def get_movie_url_by_search(key, filter_tags):
     key = key.lower()
     search_url = "https://missav.com/search/" + key
     search_regex = r'<a href="([^"]+)" alt="' + key + r'([\-a-z]*)" >'
-=======
-def get_movie_url_by_search(key):
-    search_url = "https://missav.ai/search/" + key
-    search_regex = r'<a href="([^"]+)" alt="' + key + '" >'
->>>>>>> refs/remotes/origin/master
     html_source = requests.get(url=search_url, headers=headers, verify=False).text
     movie_url_matches = re.findall(pattern=search_regex, string=html_source)
     temp_url_list = list(map(lambda x:x[0], set(movie_url_matches)))
@@ -782,16 +753,13 @@ def execute_download(args):
     search = args.search
     file = args.file
     title = args.title
-<<<<<<< HEAD
     video_reencode = args.video_reencode
     audio_reencode = args.audio_reencode
     filter_tags = list(map(lambda x: x.strip().lower(), args.tags.split(",")))
-=======
     quality = args.quality
     retry = args.retry
     delay = args.delay
     timeout = args.timeout
->>>>>>> refs/remotes/origin/master
 
     if ffcover:
         ffmpeg = True
@@ -846,12 +814,8 @@ def execute_download(args):
         delete_all_subfolders(movie_save_path_root)
         try:
             logging.info("Processing URL: " + url)
-<<<<<<< HEAD
             download(url, ffmpeg_action=ffmpeg, cover_action=cover, title_action=title, cover_as_preview=ffcover,
-                        video_reencode=video_reencode, audio_reencode=audio_reencode)
-=======
-            download(url, ffmpeg_action=ffmpeg, cover_action=cover, title_action=title, cover_as_preview=ffcover, quality=quality, retry=retry, delay=delay, timeout=timeout)
->>>>>>> refs/remotes/origin/master
+                     video_reencode=video_reencode, audio_reencode=audio_reencode, quality=quality, retry=retry, delay=delay, timeout=timeout)
             logging.info("Processing URL Complete: " + url)
             print()
         except Exception as e:
@@ -886,21 +850,12 @@ def main():
 
 
         epilog='Examples:\n'
-<<<<<<< HEAD
-               '  miyuki -plist "https://missav.com/search/JULIA?filters=uncensored-leak&sort=saved" -limit 50 -ffmpeg\n'
-               '  miyuki -plist "https://missav.com/search/JULIA?filters=individual&sort=views" -limit 20 -ffmpeg\n'
-               '  miyuki -plist https://missav.com/dm132/actresses/JULIA -limit 20 -ffmpeg -cover\n'
-               '  miyuki -plist https://missav.com/playlists/ewzoukev -ffmpeg -proxy localhost:7890\n'
-               '  miyuki -urls https://missav.com/sw-950 https://missav.com/dandy-917\n'
-               '  miyuki -urls https://missav.com/sw-950 -proxy localhost:7890\n'
-=======
                '  miyuki -plist "https://missav.ai/search/JULIA?filters=uncensored-leak&sort=saved" -limit 50 -ffmpeg\n'
                '  miyuki -plist "https://missav.ai/search/JULIA?filters=individual&sort=views" -limit 20 -ffmpeg\n'
                '  miyuki -plist "https://missav.ai/dm132/actresses/JULIA" -limit 20 -ffmpeg -cover\n'
                '  miyuki -plist "https://missav.ai/playlists/ewzoukev" -ffmpeg -proxy localhost:7890\n'
                '  miyuki -urls https://missav.ai/sw-950 https://missav.ai/dandy-917\n'
                '  miyuki -urls https://missav.ai/sw-950 -proxy localhost:7890\n'
->>>>>>> refs/remotes/origin/master
                '  miyuki -auth miyuki@gmail.com miyukiQAQ -ffmpeg\n'
                '  miyuki -file /home/miyuki/url.txt -ffmpeg\n'
                '  miyuki -search sw-950 -ffcover\n',
@@ -919,17 +874,13 @@ def main():
     parser.add_argument('-ffcover', action='store_true', required=False, help='Set cover as preview (ffmpeg required)')
     parser.add_argument('-noban', action='store_true', required=False, help='Do not display the banner')
     parser.add_argument('-title', action='store_true', required=False, help='Full title as file name')
-<<<<<<< HEAD
     parser.add_argument('-tags', type=str, required=False, default='', help='Set tags to use when fetching videos, coma separated')
     parser.add_argument('-video-reencode', action='store_true', required=False, help='Enable Video re-encoding (if available)')
     parser.add_argument('-audio-reencode', action='store_true', required=False, help='Enable Audio re-encoding (if available)')
-=======
     parser.add_argument('-quality', type=str, required=False, metavar='', help='Specify the movie resolution')
     parser.add_argument('-retry', type=str, required=False, metavar='', help='Number of retries for downloading segments')
     parser.add_argument('-delay', type=str, required=False, metavar='', help='Delay in seconds before retry')
     parser.add_argument('-timeout', type=str, required=False, metavar='', help='Timeout in seconds for segment download')
->>>>>>> refs/remotes/origin/master
-
 
     args = parser.parse_args()
 

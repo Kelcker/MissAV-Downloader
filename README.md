@@ -1,8 +1,8 @@
 ![MissAV-Downloader](https://socialify.git.ci/MiyukiQAQ/MissAV-Downloader/image?description=1&font=Inter&forks=1&issues=1&language=1&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Auto)
 
-# Miyuki
+## ⭐️ Miyuki
 
-⭐️ A tool for downloading videos from the "MissAV" website.
+A tool for downloading videos from the "MissAV" website.
 
 ## ⚙️ Installation
 
@@ -26,7 +26,7 @@ pip install --upgrade miyuki
 
 ```
 [root@miyuki ~]# miyuki -h
-usage: miyuki.py [-h] [-urls  [...]] [-auth  [...]] [-plist] [-limit] [-search] [-file] [-proxy] [-ffmpeg] [-cover] [-ffcover] [-noban] [-title]
+usage: miyuki.py [-h] [-urls  [...]] [-auth  [...]] [-plist] [-limit] [-search] [-file] [-proxy] [-ffmpeg] [-cover] [-ffcover] [-noban] [-title] [-quality] [-retry] [-delay] [-timeout]
 
 A tool for downloading videos from the "MissAV" website.
 
@@ -45,6 +45,10 @@ Use the -cover   option to save the cover when downloading the video
 Use the -ffcover option to set the cover as the video preview (ffmpeg required)
 Use the -noban   option to turn off the miyuki banner when downloading the video
 Use the -title   option to use the full title as the movie file name
+Use the -quality option to specify the movie resolution (360, 480, 720, 1080...)
+Use the -retry   option to specify the number of retries for downloading segments
+Use the -delay   option to specify the delay before retry ( seconds )
+Use the -timeout option to specify the timeout for segment download ( seconds )
 
 options:
   -h, --help     show this help message and exit
@@ -60,35 +64,39 @@ options:
   -ffcover       Set cover as preview (ffmpeg required)
   -noban         Do not display the banner
   -title         Full title as file name
+  -quality       Specify the movie resolution
+  -retry         Number of retries for downloading segments
+  -delay         Delay in seconds before retry
+  -timeout       Timeout in seconds for segment download
 
 Examples:
-  miyuki -plist "https://missav.com/search/JULIA?filters=uncensored-leak&sort=saved" -limit 50 -ffmpeg
-  miyuki -plist "https://missav.com/search/JULIA?filters=individual&sort=views" -limit 20 -ffmpeg
-  miyuki -plist "https://missav.com/dm132/actresses/JULIA" -limit 20 -ffmpeg -cover
-  miyuki -plist "https://missav.com/playlists/ewzoukev" -ffmpeg -proxy localhost:7890
-  miyuki -urls https://missav.com/sw-950 https://missav.com/dandy-917
-  miyuki -urls https://missav.com/sw-950 -proxy localhost:7890
+  miyuki -plist "https://missav.ai/search/JULIA?filters=uncensored-leak&sort=saved" -limit 50 -ffmpeg
+  miyuki -plist "https://missav.ai/search/JULIA?filters=individual&sort=views" -limit 20 -ffmpeg
+  miyuki -plist "https://missav.ai/dm132/actresses/JULIA" -limit 20 -ffmpeg -cover
+  miyuki -plist "https://missav.ai/playlists/ewzoukev" -ffmpeg -proxy localhost:7890
+  miyuki -urls https://missav.ai/sw-950 https://missav.ai/dandy-917
+  miyuki -urls https://missav.ai/sw-950 -proxy localhost:7890
   miyuki -auth miyuki@gmail.com miyukiQAQ -ffmpeg
   miyuki -file /home/miyuki/url.txt -ffmpeg
   miyuki -search sw-950 -ffcover
 ```
 
-## 🤫 The ```-plist``` option
+## 💬 The ```-plist``` option
 
 - Use the -plist option to download movies from a playlist.
 - This playlist can be a public playlist created by your own account, or any playlist displayed based on search results or tag filters.
 - **You should wrap the playlist URL with " " when you use the -plist option.**
 
 Command Examples:
-- ```miyuki -plist "https://missav.com/search/JULIA?filters=uncensored-leak&sort=saved" -limit 50 -ffmpeg```
-- ```miyuki -plist "https://missav.com/search/JULIA?filters=individual&sort=views" -limit 20 -ffmpeg```
-- ```miyuki -plist "https://missav.com/dm132/actresses/JULIA" -limit 20 -ffmpeg```
-- ```miyuki -plist "https://missav.com/playlists/ewzoukev" -limit 20 -ffmpeg```
-- ```miyuki -plist "https://missav.com/dm444/en/labels/WANZ" -limit 20 -ffmpeg```
-- ```miyuki -plist "https://missav.com/dm21/en/makers/Takara%20Visual" -limit 20 -ffmpeg```
-- ```miyuki -plist "https://missav.com/dm1/en/genres/4K" -limit 20 -ffmpeg```
+- ```miyuki -plist "https://missav.ai/search/JULIA?filters=uncensored-leak&sort=saved" -limit 50 -ffmpeg```
+- ```miyuki -plist "https://missav.ai/search/JULIA?filters=individual&sort=views" -limit 20 -ffmpeg```
+- ```miyuki -plist "https://missav.ai/dm132/actresses/JULIA" -limit 20 -ffmpeg```
+- ```miyuki -plist "https://missav.ai/playlists/ewzoukev" -limit 20 -ffmpeg```
+- ```miyuki -plist "https://missav.ai/dm444/en/labels/WANZ" -limit 20 -ffmpeg```
+- ```miyuki -plist "https://missav.ai/dm21/en/makers/Takara%20Visual" -limit 20 -ffmpeg```
+- ```miyuki -plist "https://missav.ai/dm1/en/genres/4K" -limit 20 -ffmpeg```
 
-## ⚠️ Precautions
+## 💡 Precautions
 
 - If you are from an ancient oriental country, you will most likely need a proxy.
 - Use ffmpeg to synthesize videos for the best experience.
@@ -99,10 +107,30 @@ Command Examples:
 2. Please check whether the ffmpeg command is valid before using the -ffmpeg option. (e.g. ```ffmpeg -version```)
 3. To install FFmpeg, please refer to https://ffmpeg.org/
 
-## License
+## 📄 Disclaimer
 
-MIT
+This project is licensed under the [MIT License](LICENSE). The following additional disclaimers and notices apply:
 
-## Star History
+### 1. Legal Compliance
+- This software is provided solely for **communication, research, learning, and personal use**.  
+- Users are responsible for ensuring that their use of this software complies with all applicable laws and regulations in their jurisdiction.  
+- The software must not be used for any unlawful, unethical, or unauthorized purposes, including but not limited to violating third-party rights or legal restrictions.
+
+### 2. No Warranty
+As stated in the MIT License:  
+> "THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT."
+
+### 3. Limitation of Liability
+- The author(s) shall not be held liable for any claims, damages, or other liabilities arising from or in connection with the use or performance of this software.  
+- Users bear all risks and responsibilities for the use of this software, including but not limited to data loss, system damage, or legal consequences.
+
+### 4. Third-Party Dependencies
+- This project may include or depend on third-party libraries or tools. Users are responsible for reviewing and complying with the licenses and terms of these dependencies.
+
+### 5. Security and Privacy
+- This software may interact with user systems, networks, or data. Users should implement appropriate security measures to protect sensitive information and infrastructure.  
+- The authors are not responsible for any security vulnerabilities or data breaches resulting from the use of this software.
+
+## 📈 Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=MiyukiQAQ/MissAV-Downloader&type=Date)](https://star-history.com/#MiyukiQAQ/MissAV-Downloader&Date)

@@ -10,9 +10,11 @@ import sys
 from functools import cache
 from curl_cffi import requests
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='Miyuki - %(asctime)s - %(levelname)s - %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='Miyuki - %(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
 magic_number = 114514
 RECORD_FILE = 'downloaded_urls_miyuki.txt'
@@ -20,7 +22,7 @@ FFMPEG_INPUT_FILE = 'ffmpeg_input_miyuki.txt'
 ERROR_RECORD_FILE = 'error_records_miyuki.txt'
 TMP_THML_FILE = 'tmp_movie_miyuki.html'
 downloaded_urls = set()
-movie_save_path_root = 'movies_folder_miyuki'
+movie_save_path_root = '.' #'movies_folder_miyuki'
 video_m3u8_prefix = 'https://surrit.com/'
 video_playlist_suffix = '/playlist.m3u8'
 href_regex_movie_collection = r'<a class="text-secondary group-hover:text-primary" href="([^"]+)" alt="'
@@ -38,8 +40,8 @@ banner = """
 ░░██████ ██████  ░░░                        ░░███       ░░░  
  ░███░█████░███  ████  █████ ████ █████ ████ ░███ █████ ████ 
  ░███░░███ ░███ ░░███ ░░███ ░███ ░░███ ░███  ░███░░███ ░░███ 
- ░███ ░░░  ░███  ░███  ░███ ░███  ░███ ░███  ░██████░   ░███ 
- ░███      ░███  ░███  ░███ ░███  ░███ ░███  ░███░░███  ░███ 
+ ░███ ░░░  ░███  ░███  ░███ ░███  ░███ ░███  ░██████░   ░███
+ ░███      ░███  ░███  ░███ ░███  ░███ ░███  ░███░░███  ░███
  █████     █████ █████ ░░███████  ░░████████ ████ █████ █████
 ░░░░░     ░░░░░ ░░░░░   ░░░░░███   ░░░░░░░░ ░░░░ ░░░░░ ░░░░░ 
                         ███ ░███                             
